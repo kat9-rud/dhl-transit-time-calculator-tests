@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id("io.qameta.allure") version "2.12.0"
+}
+
+group = 'com.gmail.ek.rudenko'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(
+            'org.junit.jupiter:junit-jupiter:5.10.0',
+            'org.seleniumhq.selenium:selenium-java:4.27.0',
+            'io.qameta.allure:allure-junit5:2.24.0',
+            'com.opencsv:opencsv:5.7.1'
+    )
+    testCompileOnly("org.projectlombok:lombok:1.18.38")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+}
+
+test {
+    useJUnitPlatform()
+//    maxParallelForks = 2 // Number of test forks
+/*    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
+    systemProperty 'junit.jupiter.execution.parallel.mode.default', 'concurrent'
+    systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'concurrent'*/
+}

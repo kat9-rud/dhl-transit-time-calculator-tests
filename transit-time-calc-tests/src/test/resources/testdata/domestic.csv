@@ -1,0 +1,11 @@
+TC,Origin Country,Origin Postcode,Destination Country,Destination Postcode,Expected Result,Notes,Invalid Field
+TC01,Sweden,valid_real_min,Sweden,valid_real_min,ok,Both postcodes are real & valid,
+TC02,Sweden,valid_real_max,Sweden,invalid_length,error,Dest postcode too long or short,destination
+TC03,Sweden,valid_with_space_internal,Sweden,invalid_non_numeric,error,Letters or mixed characters in dest,destination
+TC04,Sweden,valid_with_space_leading,Sweden,invalid_blank,error,Dest postcode is empty,destination
+TC05,Sweden,valid_with_space_trailing,Sweden,invalid_special_chars,error,Hyphen or non-digit symbols in dest,destination
+TC06,Sweden,invalid_length,Sweden,valid_real_max,error,Origin postcode has wrong length,origin
+TC07,Sweden,invalid_non_numeric,Sweden,valid_with_space_trailing,error,Origin contains letters,origin
+TC08,Sweden,invalid_special_chars,Sweden,valid_with_space_leading,error,Origin has invalid characters,origin
+TC09,Sweden,invalid_blank,Sweden,valid_with_space_internal,error,Origin is blank,origin
+TC10,Sweden,invalid_unused_range,Sweden,valid_real_min,error,Technically valid but logically invalid,origin
