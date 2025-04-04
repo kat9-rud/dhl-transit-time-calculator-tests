@@ -1,44 +1,49 @@
 package com.gmail.ek.rudenko;
 
 import com.gmail.ek.rudenko.model.TestCaseData;
-import com.gmail.ek.rudenko.page.CalculatorPage;
 import com.gmail.ek.rudenko.util.PostcodeResolver;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-import static io.qameta.allure.SeverityLevel.NORMAL;
+import static io.qameta.allure.Allure.*;
 import static io.qameta.allure.SeverityLevel.CRITICAL;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.qameta.allure.SeverityLevel.NORMAL;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Epic("European Road Freight Transit Time Calculator")
 @Feature("Domestic Routes (Sweden -> Sweden)")
-public class DomesticRouteTests {
-    private WebDriver driver;
-    private CalculatorPage calculatorPage;
-
-    @BeforeEach
-    public void setup() {
-        driver = new ChromeDriver();
-        calculatorPage = new CalculatorPage(driver);
-    }
+public class DomesticRouteTests extends BaseTest {
     @Severity(CRITICAL)
     @Description("Sweden -> Sweden | Successful cases should show transit time result")
     @ParameterizedTest(name = "{0}")
     @MethodSource("com.gmail.ek.rudenko.util.TestCaseDataLoader#successfulCasesDomestic")
     public void testSuccessfulCalculation(TestCaseData tc) {
-        calculatorPage.open()
-                .selectOriginCountry(tc.getOriginCountry())
-                .enterOriginPostcode(PostcodeResolver.resolve(tc.getOriginPostcode(), tc.getOriginCountry()))
-                .selectDestinationCountry(tc.getDestinationCountry())
-                .enterDestinationPostcode(PostcodeResolver.resolve(tc.getDestinationPostcode(), tc.getDestinationCountry()))
-                .clickCalculateButton();
-        assertTrue(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result should be shown.");
+        step("Fill out and submit Transit Time Calculator form", () -> {
+            calculatorPage.open()
+                    .selectOriginCountry(tc.getOriginCountry())
+                    .enterOriginPostcode(PostcodeResolver.resolve(tc.getOriginPostcode(), tc.getOriginCountry()))
+                    .selectDestinationCountry(tc.getDestinationCountry())
+                    .enterDestinationPostcode(PostcodeResolver.resolve(tc.getDestinationPostcode(), tc.getDestinationCountry()))
+                    .clickCalculateButton();
+        });
+
+        //        pause(1000); //useful for debug
+
+        step("Verify Transit Time Result section and product options", () -> {
+            assertTrue(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result should be shown.");
+            assertEquals(4, calculatorPage.getProductOptionCount(), "Expected 4 product options for domestic route");
+        });
+
+        step("Check visibility of date pickers", () -> {
+            assertTrue(calculatorPage.isDeliveryDatePickerVisible(), "Expected delivery date picker for domestic route.");
+            assertTrue(calculatorPage.isPickupDatePickerVisible(), "Expected pickup date picker for domestic route.");
+        });
+
+        step("Go back and check that Transit Time Result section disappears", () -> {
+            calculatorPage.clickEditPreviousStepButton();
+            assertFalse(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result section should NOT be shown.");
+        });
     }
 
     @Severity(NORMAL)
@@ -69,9 +74,5 @@ public class DomesticRouteTests {
                 .clickCalculateButton();
         assertFalse(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result section should NOT be shown.");
         assertTrue(calculatorPage.isDestinationPostcodeErrorVisible(), "Expected error on destination postcode.");
-    }
-    @AfterEach
-    public void teardown() {
-        driver.quit();
     }
 }

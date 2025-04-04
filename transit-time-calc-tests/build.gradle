@@ -23,7 +23,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    maxParallelForks = 2 // Number of test forks
+//    maxParallelForks = 2 // Number of test forks
 /*    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
     systemProperty 'junit.jupiter.execution.parallel.mode.default', 'concurrent'
     systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'concurrent'*/

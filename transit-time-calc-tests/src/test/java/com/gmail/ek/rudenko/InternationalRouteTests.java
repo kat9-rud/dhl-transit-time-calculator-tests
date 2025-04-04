@@ -1,31 +1,21 @@
 package com.gmail.ek.rudenko;
 
 import com.gmail.ek.rudenko.model.TestCaseData;
-import com.gmail.ek.rudenko.page.CalculatorPage;
 import com.gmail.ek.rudenko.util.PostcodeResolver;
-import io.qameta.allure.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-import static io.qameta.allure.SeverityLevel.NORMAL;
 import static io.qameta.allure.SeverityLevel.CRITICAL;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.qameta.allure.SeverityLevel.NORMAL;
+import static org.junit.jupiter.api.Assertions.*;
+
 @Epic("European Road Freight Transit Time Calculator")
 @Feature("International Routes (Sweden -> Great Britain)")
-public class InternationalRouteTests {
-    private WebDriver driver;
-    private CalculatorPage calculatorPage;
-
-    @BeforeEach
-    public void setup() {
-        driver = new ChromeDriver();
-        calculatorPage = new CalculatorPage(driver);
-    }
+public class InternationalRouteTests extends BaseTest {
     @Severity(CRITICAL)
     @Description("Sweden -> Great Britain | Successful cases should show transit time result")
     @ParameterizedTest(name = "{0}")
@@ -38,6 +28,11 @@ public class InternationalRouteTests {
                 .enterDestinationPostcode(PostcodeResolver.resolve(tc.getDestinationPostcode(), tc.getDestinationCountry()))
                 .clickCalculateButton();
         assertTrue(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result should be shown.");
+        assertEquals(2, calculatorPage.getProductOptionCount(), "Expected 2 product options for international route");
+        assertFalse(calculatorPage.isDeliveryDatePickerVisible(), "Delivery date picker should not be visible for international route.");
+        assertTrue(calculatorPage.isPickupDatePickerVisible(), "Expected pickup date picker for international route.");
+        calculatorPage.clickEditPreviousStepButton();
+        assertFalse(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result section should NOT be shown.");
     }
 
     @Severity(NORMAL)
@@ -68,9 +63,5 @@ public class InternationalRouteTests {
                 .clickCalculateButton();
         assertFalse(calculatorPage.isTransitTimeResultSectionVisible(), "Transit Time Result section should NOT be shown.");
         assertTrue(calculatorPage.isDestinationPostcodeErrorVisible(), "Expected error on destination postcode.");
-    }
-    @AfterEach
-    public void teardown() {
-        driver.quit();
     }
 }

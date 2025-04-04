@@ -24,6 +24,7 @@ public class CalculatorPage {
     private final By transitTimeResultSection = By.cssSelector("div[class*='options']:nth-of-type(2)");
     private final By editPreviousStepButton = By.cssSelector("p[class*='goto-previous']");
     private final By strictlyNecessaryOnlyButton = By.cssSelector("div#onetrust-button-group #onetrust-reject-all-handler");
+    private final By productOptionBoxes = By.cssSelector("div[class*='productdetail']");
     private final By pickupDatePicker = By.id("leadtime-datepicker");
     private final By deliveryDatePicker = By.id("leadtime-datepicker2");
 
@@ -115,5 +116,27 @@ public class CalculatorPage {
         ));
         button.click();
         return this;
+    }
+
+    public int getProductOptionCount() {
+        return driver.findElements(productOptionBoxes).size();
+    }
+
+    public boolean isPickupDatePickerVisible() {
+        try {
+            WebElement picker = wait.until(visibilityOfElementLocated(pickupDatePicker));
+            return picker.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isDeliveryDatePickerVisible() {
+        try {
+            WebElement picker = wait.until(visibilityOfElementLocated(deliveryDatePicker));
+            return picker.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
