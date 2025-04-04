@@ -1,0 +1,17 @@
+Country,Label,Postcode
+Sweden,valid_real_min,11115
+Sweden,valid_real_max,98499
+Sweden,valid_with_space_internal,11 455
+Sweden,valid_with_space_leading, 11455
+Sweden,valid_with_space_trailing,11455
+Sweden,invalid_length,114556
+Sweden,invalid_non_numeric,ABCDE
+Sweden,invalid_blank,
+Sweden,invalid_special_chars,11-455
+Sweden,invalid_unused_range,99999
+Great Britain,valid_structured,SW1A 2AA
+Great Britain,valid_format_tolerant,sw1a1aa
+Great Britain,invalid_numeric_only,12345
+Great Britain,invalid_special_chars,EC1@ 1BB
+Great Britain,invalid_blank,
+Great Britain,invalid_prefix,QV1A 1BB
